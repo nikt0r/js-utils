@@ -1,5 +1,4 @@
 namespace TsUtils {
-    
     let backupStore: Record<string, any> = {};
     type StoreKey = keyof typeof backupStore;
 
@@ -59,5 +58,26 @@ namespace TsUtils {
             }
         }
         return list;
+    }
+
+    function addElementListenerByClass(className: string) {
+        const inputElement = document.querySelector(`.${className} input`) as HTMLInputElement;
+        inputElement.removeEventListener("input", blurHandler);
+        inputElement.addEventListener("input", blurHandler, { passive: true });
+    }
+
+    function blurHandler(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const enteredValue = target.value;
+        const inputValue = enteredValue.replace(/\s/g, "");
+        if (/^\d{4}\-[1-9]{2}\d{4}$/.test(inputValue)) {
+            const converted = `${inputValue.substring(0, 4)}-00${inputValue.substring(5)}`;
+            target.value = converted;
+            console.log(`${enteredValue.replace(/\s/g, "[sp]")} -> ${converted}`);
+        } else if (/^\d{10}$/.test(inputValue)) {
+            const converted = `${inputValue.substring(0, 4)}-00${inputValue.substring(4)}`;
+            target.value = converted;
+            console.log(`${enteredValue.replace(/\s/g, "[sp]")} -> ${converted}`);
+        }
     }
 }
