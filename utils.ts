@@ -80,4 +80,36 @@ namespace TsUtils {
             console.log(`${enteredValue.replace(/\s/g, "[sp]")} -> ${converted}`);
         }
     }
+
+    function removeDuplicates<T>(list: T[]): T[] {
+        return Array.from(new Set(list));
+    }
+
+    function removeDuplicatesByFields<T>(array: T[], fields: string[]): T[] {
+        const seen = new Set();
+        return array.filter((item) => {
+            type StatusKey = keyof typeof item;
+            const key = fields
+                .map((field) => {
+                    return item[field as StatusKey];
+                })
+                .join();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }
+
+    /*
+    const people = [
+        { firstName: "John", lastName: "Doe", age: 30 },
+        { firstName: "Jane", lastName: "Doe", age: 25 },
+        { firstName: "John", lastName: "Doe", age: 40 }, // duplicate based on name
+        { firstName: "John", lastName: "Smith", age: 30 }
+        ];
+
+    const uniquePeople = removeDuplicatesByFields(people, ["firstName", "lastName"]);
+
+    console.log(uniquePeople);
+    */
 }
